@@ -1,0 +1,13 @@
+{
+  "name": "blockchain-informing-service",
+  "version": "0.0.1",
+  "description": "Reactive service for creating blockchain storage events and for informing the blockchain-service something has happened.",
+  "main": "app.js",
+  "dependencies": {
+    "cron": "^1.5.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {},
+  "author": "Aad Versteden",
+  "license": "MIT"
+}
