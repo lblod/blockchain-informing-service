@@ -76,7 +76,7 @@ app.post('/create-signing-requests/', async function( req, res, next ) {
 
     // inform the blockchain component that something has arrived
     console.log('informing the blockchain');
-    request.post( "/blockchain/notify" );
+    request.post( "http://blockchain/notify" );
 
     return true;
   } catch(e) {
