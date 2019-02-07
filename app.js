@@ -23,7 +23,6 @@ app.post('/create-signing-requests/', async function( req, res, next ) {
         SELECT DISTINCT ?g ?type ?resource {
           GRAPH ?g {
             ?resource a ?type;
-            dct:subject ?subject;
             sign:status <http://mu.semte.ch/vocabularies/ext/signing/publication-status/unpublished>.
             FILTER(?type IN (sign:SignedResource, sign:PublishedResource))
           }
