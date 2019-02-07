@@ -37,7 +37,7 @@ app.post('/create-signing-requests/', async function( req, res, next ) {
     // inform the blockchain component that something has arrived
     if(unpublishedResources.length > 0){
       console.log('informing the blockchain');
-      request.post( "http://blockchain/notify");
+      await notify();
     }
     else {
       console.log('nothing to do');
@@ -47,9 +47,18 @@ app.post('/create-signing-requests/', async function( req, res, next ) {
 
   catch(e) {
     console.log(`An error occurred`);
-    console.error(e);
+    console.log(e);
     res.status(500).send({status: 500, title: 'unexpected error while processing request'});
   }
 });
+
+const notify = function(){
+  return new Promise((resolve, reject) => {
+    request
+      .post('http://blockchain/notify')
+      .on('response', response => resolve(response))
+      .on('error', err => reject(err));
+  });
+};
 
 console.log("Loaded blockchain informing service");
