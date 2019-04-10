@@ -16,25 +16,27 @@ app.post('/create-signing-requests/', async function( req, res, next ) {
 
   try {
 
-    let unpublishedResources = (await query(`
+    let resourcesToSendNotificationFor = (await query(`
         PREFIX ext: <http://mu.semte.ch/vocabularies/ext/>
         PREFIX sign: <http://mu.semte.ch/vocabularies/ext/signing/>
 
-        SELECT DISTINCT ?g ?type ?resource {
+        SELECT DISTINCT ?g ?type ?resource ?status{
           GRAPH ?g {
             ?resource a ?type;
-            sign:status <http://mu.semte.ch/vocabularies/ext/signing/publication-status/unpublished>.
-            FILTER(?type IN (sign:SignedResource, sign:PublishedResource))
+            sign:status ?status.
+            FILTER(?type IN (sign:SignedResource, sign:PublishedResource, sign:BurnedResource)).
+            FILTER(?status IN ( <http://mu.semte.ch/vocabularies/ext/signing/publication-status/unpublished>,
+                                <http://mu.semte.ch/vocabularies/ext/signing/publication-status/unburned>))
           }
         }
     `)).results.bindings;
 
 
-    console.log(`Found ${unpublishedResources.length} unpublished resources`);
-    console.log(JSON.stringify( unpublishedResources ));
+    console.log(`Found ${resourcesToSendNotificationFor.length} unpublished resources`);
+    console.log(JSON.stringify( resourcesToSendNotificationFor ));
 
     // inform the blockchain component that something has arrived
-    if(unpublishedResources.length > 0){
+    if(resourcesToSendNotificationFor.length > 0){
       console.log('informing the blockchain');
       await notify();
     }
